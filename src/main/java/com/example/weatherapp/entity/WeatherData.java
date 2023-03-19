@@ -30,8 +30,8 @@ public class WeatherData {
     @Column(nullable = false)
     private Integer temperature;
 
-    @Column(name = "wind_mph", nullable = false)
-    private Double windMPH;
+    @Column(name = "wind_meters_ph", nullable = false)
+    private Double windMetersPerHour;
 
     @Column(name = "pressure_mb", nullable = false)
     private Double pressureMB;

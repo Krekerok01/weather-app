@@ -7,7 +7,7 @@ public class WeatherReadDto {
 
     String location;
     Integer temperature;
-    Double windMPH;
+    Double windMetersPerHour;
     Double pressureMB;
     Double humidity;
     String weatherCondition;

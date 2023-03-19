@@ -45,7 +45,7 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             .orElseThrow(() -> new WeatherDataNotFoundException("There are no weather records in the database."));
         return new WeatherReadDto(weatherData.getLocation(),
             weatherData.getTemperature(),
-            weatherData.getWindMPH(),
+            weatherData.getWindMetersPerHour(),
             weatherData.getPressureMB(),
             weatherData.getHumidity(),
             weatherData.getWeatherCondition());
@@ -104,7 +104,7 @@ public class WeatherDataServiceImpl implements WeatherDataService {
 
 
 
-    @Scheduled(fixedDelay = (60000 * 15))
+    @Scheduled(fixedDelayString = "${fixed.rate.milliseconds}")
     private void createWeatherDataRecord() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -117,6 +117,8 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println(response.body());
+
             JsonObject jsonObject = Json.createReader(new StringReader(response.body()))
                 .readObject();
             saveNewWeatherData(jsonObject);
@@ -128,16 +130,16 @@ public class WeatherDataServiceImpl implements WeatherDataService {
 
     private void saveNewWeatherData(JsonObject jsonObject) {
         String location = jsonObject.getJsonObject("location").getString("region");
-        int temp = jsonObject.getJsonObject("current").getJsonNumber("temp_c").intValue();
-        double wind = jsonObject.getJsonObject("current").getJsonNumber("wind_mph").doubleValue();
+        int temperature = jsonObject.getJsonObject("current").getJsonNumber("temp_c").intValue();
+        double windSpeed = jsonObject.getJsonObject("current").getJsonNumber("wind_kph").doubleValue();
         double pressure = jsonObject.getJsonObject("current").getJsonNumber("pressure_mb").doubleValue();
         double humidity = jsonObject.getJsonObject("current").getJsonNumber("humidity").doubleValue();
         String condition = jsonObject.getJsonObject("current").getJsonObject("condition").getString("text");
 
         WeatherData weatherData = WeatherData.builder()
             .location(location)
-            .temperature(temp)
-            .windMPH(wind)
+            .temperature(temperature)
+            .windMetersPerHour(windSpeed * 1000)
             .pressureMB(pressure)
             .humidity(humidity)
             .weatherCondition(condition)

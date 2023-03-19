@@ -32,7 +32,7 @@ public class WeatherDataServiceImplTest {
     @Test
     public void testGetCurrentWeather() {
         WeatherData weatherData = WeatherData.builder()
-            .location("Minsk").temperature(6).windMPH(10.0).pressureMB(1013.0).humidity(65.0).weatherCondition("Sunny")
+            .location("Minsk").temperature(6).windMetersPerHour(10000.0).pressureMB(1013.0).humidity(65.0).weatherCondition("Sunny")
             .createdAt(Instant.now())
             .build();
 
@@ -40,7 +40,7 @@ public class WeatherDataServiceImplTest {
             .thenReturn(Optional.of(weatherData));
 
         WeatherReadDto expected =
-            new WeatherReadDto("Minsk", 6, 10.0, 1013.0, 65.0, "Sunny");
+            new WeatherReadDto("Minsk", 6, 10000.0, 1013.0, 65.0, "Sunny");
         WeatherReadDto actual = weatherDataService.getCurrentWeather();
 
         assertEquals(expected, actual);
@@ -50,11 +50,11 @@ public class WeatherDataServiceImplTest {
     public void testGetAverageDailyTemperature() {
         Instant now = Instant.now();
 
-        WeatherData weatherData1 = WeatherData.builder().location("Minsk").temperature(6).windMPH(9.0)
+        WeatherData weatherData1 = WeatherData.builder().location("Minsk").temperature(6).windMetersPerHour(9000.0)
             .pressureMB(1017.0).humidity(66.0).weatherCondition("Sunny").createdAt( now.minus(Duration.ofDays(1)))
             .build();
 
-        WeatherData weatherData2 = WeatherData.builder().location("Minsk").temperature(8).windMPH(6.0)
+        WeatherData weatherData2 = WeatherData.builder().location("Minsk").temperature(8).windMetersPerHour(6000.0)
             .pressureMB(1009.0).humidity(69.0).weatherCondition("Cloudy").createdAt(now)
             .build();
 
