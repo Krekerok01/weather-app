@@ -117,8 +117,6 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println(response.body());
-
             JsonObject jsonObject = Json.createReader(new StringReader(response.body()))
                 .readObject();
             saveNewWeatherData(jsonObject);
